@@ -1,0 +1,576 @@
+import customtkinter as ctk
+import pandas as pd
+import numpy as np
+import matplotlib.pyplot as plt
+from matplotlib.backends.backend_tkagg import FigureCanvasTkAgg
+import seaborn as sns
+from tkinter import filedialog, messagebox
+import scipy.stats as stats
+from PIL import Image, ImageTk
+import sys
+import threading
+
+class AppAnalisisEstadistico:
+    def __init__(self, tema="moderno"):
+        self.app = ctk.CTk()
+        self.app.title("Análisis Estadístico de Biblioteca")
+        self.app.geometry("1280x800")
+        self.app.minsize(1024, 768)
+        self.df = None
+        self.sample = None
+        self.columnas_requeridas = [
+            'ITEM', 'DOCUMENTO', 'NOMBRE', 'EDAD', 'GENERO',
+            'ESTRATO', 'TIPO LIBROS', 'TIPO USUARIO', 'SEDE',
+            'TIEMPO DE PRESTAMO'
+        ]
+        self.interpretaciones = {
+            'GENERO': """Interpretación del Análisis de Género:
+            • Este gráfico muestra la distribución de géneros entre usuarios
+            • Analiza la proporción entre diferentes géneros
+            • Identifica posibles sesgos en el uso de la biblioteca
+            • Considera factores socioculturales que influyen en esta distribución
+
+            Recomendaciones:
+            • Desarrollar programas específicos para grupos subrepresentados
+            • Evaluar la accesibilidad de servicios por género
+            • Implementar estrategias de inclusión si es necesario""",
+
+            'ESTRATO': """Interpretación del Análisis de Estratos Socioeconómicos:
+            • Visualiza la distribución socioeconómica de usuarios
+            • Identifica grupos predominantes y minoritarios
+            • Evalúa la equidad en el acceso a servicios
+
+            Recomendaciones:
+            • Adaptar servicios según necesidades específicas
+            • Implementar programas de alcance comunitario
+            • Considerar horarios y ubicaciones estratégicas""",
+
+            'EDAD': """Interpretación del Análisis de Edad:
+            • Muestra la distribución etaria de usuarios
+            • Identifica grupos de edad predominantes
+            • Analiza tendencias generacionales
+
+            Estadísticas relevantes:
+            • Media: edad promedio de usuarios
+            • Mediana: valor central de edad
+            • Moda: edad más común
+            • Desviación estándar: variabilidad en edades
+
+            Recomendaciones:
+            • Adaptar colecciones y servicios por grupo etario
+            • Desarrollar programas específicos por edad
+            • Considerar necesidades especiales por grupo""",
+
+            'TIEMPO DE PRESTAMO': """Interpretación del Análisis de Tiempo de Préstamo:
+            • Analiza patrones de uso temporal
+            • Identifica duraciones típicas de préstamo
+            • Evalúa eficiencia del servicio
+
+            Métricas clave:
+            • Tiempo promedio de préstamo
+            • Variabilidad en duraciones
+            • Patrones estacionales
+
+            Recomendaciones:
+            • Optimizar políticas de préstamo
+            • Identificar materiales de alta/baja rotación
+            • Ajustar períodos según demanda"""
+        }
+        self.configurar_tema(tema)
+        self.configurar_interfaz()
+        self.app.protocol("WM_DELETE_WINDOW", self.cerrar_aplicacion)
+
+    def configurar_tema(self, tema):
+        temas = {
+            "moderno": {
+                "modo": "light",
+                "color_primario": "#2D3250",  # Azul oscuro
+                "color_secundario": "#424769", # Azul grisáceo
+                "color_acento": "#676F9D",     # Lavanda
+                "fondo": "#FFFFFF",            # Blanco
+                "texto": "#333333"             # Gris oscuro
+            },
+            "oscuro": {
+                "modo": "dark",
+                "color_primario": "#1A1B26",
+                "color_secundario": "#24283B",
+                "color_acento": "#414868",
+                "fondo": "#1A1B26",
+                "texto": "#A9B1D6"
+            },
+            "claro": {
+                "modo": "light",
+                "color_primario": "#F0F4F8",
+                "color_secundario": "#D9E2EC",
+                "color_acento": "#BCCCDC",
+                "fondo": "#FFFFFF",
+                "texto": "#102A43"
+            }
+        }
+
+        tema_config = temas.get(tema, temas["moderno"])
+        ctk.set_appearance_mode(tema_config["modo"])
+        self.tema_actual = tema_config
+        self.app.configure(fg_color=tema_config["fondo"])
+
+    def configurar_interfaz(self):
+        # Configuración del contenedor principal
+        self.panel_principal = ctk.CTkFrame(self.app, fg_color="transparent")
+        self.panel_principal.pack(fill="both", expand=True, padx=20, pady=20)
+
+        # Barra superior con título y controles
+        self.configurar_barra_superior()
+
+        # Paneles principales
+        self.configurar_panel_control()
+        self.configurar_panel_resultados()
+
+        # Barra de estado inferior
+        self.configurar_barra_estado()
+
+        # Configurar menú
+        self.configurar_menu()
+
+    def configurar_barra_superior(self):
+        barra_superior = ctk.CTkFrame(self.panel_principal, height=50)
+        barra_superior.pack(fill="x")
+
+        # Título
+        titulo = ctk.CTkLabel(
+            barra_superior,
+            text="Análisis Estadístico de Biblioteca",
+            font=ctk.CTkFont(size=24, weight="bold")
+        )
+        titulo.pack(side="left", padx=20)
+
+        # Botón de cerrar
+        btn_cerrar = ctk.CTkButton(
+            barra_superior,
+            text="×",
+            width=40,
+            command=self.cerrar_aplicacion,
+            fg_color="#FF5252",
+            hover_color="#FF1A1A"
+        )
+        btn_cerrar.pack(side="right", padx=5)
+
+    def configurar_menu(self):
+        self.menu_bar = ctk.CTkFrame(self.panel_principal)
+        self.menu_bar.pack(fill="x")
+
+        # Botones del menú
+        botones_menu = [
+            ("Archivo", self.menu_archivo),
+            ("Herramientas", self.menu_herramientas),
+            ("Ayuda", self.menu_ayuda)
+        ]
+
+        for texto, comando in botones_menu:
+            btn = ctk.CTkButton(
+                self.menu_bar,
+                text=texto,
+                command=comando,
+                width=100,
+                height=32,
+                corner_radius=5,
+                hover_color=self.tema_actual["color_acento"]
+            )
+            btn.pack(side="left", padx=5, pady=5)
+
+    def configurar_panel_control(self):
+        # Panel de control principal
+        self.panel_control = ctk.CTkFrame(self.panel_principal)
+        self.panel_control.pack(side="left", fill="y", padx=(0, 10), pady=5)
+
+        # Sección de carga de archivo
+        self.seccion_archivo = ctk.CTkFrame(self.panel_control)
+        self.seccion_archivo.pack(fill="x", padx=10, pady=10)
+
+        titulo_carga = ctk.CTkLabel(
+            self.seccion_archivo,
+            text="Carga de Datos",
+            font=ctk.CTkFont(size=16, weight="bold")
+        )
+        titulo_carga.pack(pady=5)
+
+        self.btn_cargar = ctk.CTkButton(
+            self.seccion_archivo,
+            text="Cargar Archivo Excel",
+            command=self.cargar_archivo,
+            height=40,
+            corner_radius=10,
+            hover_color=self.tema_actual["color_acento"]
+        )
+        self.btn_cargar.pack(fill="x", pady=5)
+
+        # Sección de muestreo
+        self.seccion_muestreo = ctk.CTkFrame(self.panel_control)
+        self.seccion_muestreo.pack(fill="x", padx=10, pady=10)
+
+        titulo_muestreo = ctk.CTkLabel(
+            self.seccion_muestreo,
+            text="Método de Muestreo",
+            font=ctk.CTkFont(size=16, weight="bold")
+        )
+        titulo_muestreo.pack(pady=5)
+
+        # Frame para tamaño de muestra
+        frame_tamanio = ctk.CTkFrame(self.seccion_muestreo)
+        frame_tamanio.pack(fill="x", pady=5)
+
+        label_tamanio = ctk.CTkLabel(frame_tamanio, text="Tamaño de muestra:")
+        label_tamanio.pack(side="left", padx=5)
+
+        self.entrada_tamanio = ctk.CTkEntry(frame_tamanio, width=80)
+        self.entrada_tamanio.pack(side="left", padx=5)
+        self.entrada_tamanio.insert(0, "30")
+
+        # Botones de muestreo
+        self.btn_muestreo_simple = ctk.CTkButton(
+            self.seccion_muestreo,
+            text="Muestreo Aleatorio Simple",
+            command=lambda: self.crear_muestra("simple"),
+            corner_radius=10,
+            hover_color=self.tema_actual["color_acento"]
+        )
+        self.btn_muestreo_simple.pack(fill="x", pady=5)
+
+        self.btn_muestreo_estrat = ctk.CTkButton(
+            self.seccion_muestreo,
+            text="Muestreo Estratificado",
+            command=lambda: self.crear_muestra("estratificado"),
+            corner_radius=10,
+            hover_color=self.tema_actual["color_acento"]
+        )
+        self.btn_muestreo_estrat.pack(fill="x", pady=5)
+
+        # Sección de análisis
+        self.seccion_analisis = ctk.CTkFrame(self.panel_control)
+        self.seccion_analisis.pack(fill="x", padx=10, pady=10)
+
+        titulo_analisis = ctk.CTkLabel(
+            self.seccion_analisis,
+            text="Análisis",
+            font=ctk.CTkFont(size=16, weight="bold")
+        )
+        titulo_analisis.pack(pady=5)
+
+        # Botones de análisis
+        self.botones_analisis = {}
+        for variable in ['GENERO', 'ESTRATO', 'EDAD', 'TIEMPO DE PRESTAMO']:
+            self.botones_analisis[variable] = ctk.CTkButton(
+                self.seccion_analisis,
+                text=f"Análisis de {variable}",
+                command=lambda v=variable: self.analizar(v),
+                state="disabled",
+                corner_radius=10,
+                hover_color=self.tema_actual["color_acento"]
+            )
+            self.botones_analisis[variable].pack(fill="x", pady=5)
+
+    def configurar_panel_resultados(self):
+        # Panel de resultados principal
+        self.panel_resultados = ctk.CTkFrame(self.panel_principal)
+        self.panel_resultados.pack(side="right", fill="both", expand=True, padx=(5, 10), pady=5)
+
+        # Título del panel
+        titulo_resultados = ctk.CTkLabel(
+            self.panel_resultados,
+            text="Resultados del Análisis",
+            font=ctk.CTkFont(size=20, weight="bold")
+        )
+        titulo_resultados.pack(pady=10)
+
+        # Frame para los controles de exportación
+        frame_controles = ctk.CTkFrame(self.panel_resultados)
+        frame_controles.pack(fill="x", padx=10, pady=5)
+
+        btn_exportar = ctk.CTkButton(
+            frame_controles,
+            text="Exportar Resultados",
+            command=self.exportar_resultados,
+            width=150,
+            corner_radius=10,
+            hover_color=self.tema_actual["color_acento"]
+        )
+        btn_exportar.pack(side="right", padx=5)
+
+        # Área scrollable para resultados
+        self.canvas_resultados = ctk.CTkScrollableFrame(
+            self.panel_resultados,
+            label_text="",
+            height=600,
+            fg_color="#F8F9FB",
+            corner_radius=10
+        )
+        self.canvas_resultados.pack(fill="both", expand=True, padx=10, pady=10)
+
+    def configurar_barra_estado(self):
+        self.barra_estado = ctk.CTkFrame(self.panel_principal, height=30)
+        self.barra_estado.pack(fill="x", side="bottom")
+
+        # Status
+        self.label_estado = ctk.CTkLabel(
+            self.barra_estado,
+            text="Listo",
+            font=ctk.CTkFont(size=12)
+        )
+        self.label_estado.pack(side="left", padx=10)
+
+        # Firma
+        firma = ctk.CTkLabel(
+            self.barra_estado,
+            text="Desarrollado por: https://github.com/JhonLaurens",
+            font=ctk.CTkFont(size=12)
+        )
+        firma.pack(side="right", padx=10)
+
+    def menu_archivo(self):
+        menu = ctk.CTkToplevel()
+        menu.geometry("200x250")
+        menu.title("Archivo")
+
+        opciones = [
+            ("Nuevo Análisis", self.nuevo_analisis),
+            ("Abrir", self.cargar_archivo),
+            ("Guardar", self.guardar_analisis),
+            ("Exportar", self.exportar_resultados),
+            ("Salir", self.cerrar_aplicacion)
+        ]
+
+        for texto, comando in opciones:
+            btn = ctk.CTkButton(menu, text=texto, command=lambda c=comando: [menu.destroy(), c()],
+                                corner_radius=10, hover_color=self.tema_actual["color_acento"])
+            btn.pack(pady=5, padx=10, fill="x")
+
+    def menu_herramientas(self):
+        menu = ctk.CTkToplevel()
+        menu.geometry("200x200")
+        menu.title("Herramientas")
+
+        opciones = [
+            ("Configuración", self.configuracion),
+            ("Personalizar Gráficos", self.personalizar_graficos),
+            ("Limpiar Datos", self.limpiar_datos)
+        ]
+
+        for texto, comando in opciones:
+            btn = ctk.CTkButton(menu, text=texto, command=lambda c=comando: [menu.destroy(), c()],
+                                corner_radius=10, hover_color=self.tema_actual["color_acento"])
+            btn.pack(pady=5, padx=10, fill="x")
+
+    def menu_ayuda(self):
+        menu = ctk.CTkToplevel()
+        menu.geometry("200x150")
+        menu.title("Ayuda")
+
+        opciones = [
+            ("Manual de Usuario", self.mostrar_manual),
+            ("Acerca de", self.mostrar_acerca_de)
+        ]
+
+        for texto, comando in opciones:
+            btn = ctk.CTkButton(menu, text=texto, command=lambda c=comando: [menu.destroy(), c()],
+                                corner_radius=10, hover_color=self.tema_actual["color_acento"])
+            btn.pack(pady=5, padx=10, fill="x")
+
+    def cargar_archivo(self):
+        archivo = filedialog.askopenfilename(filetypes=[("Archivos Excel", "*.xlsx *.xls")])
+        if archivo:
+            thread = threading.Thread(target=self.procesar_archivo, args=(archivo,))
+            thread.start()
+
+    def procesar_archivo(self, archivo):
+        try:
+            self.actualizar_estado("Cargando archivo...")
+            self.df = pd.read_excel(archivo)
+            if all(col in self.df.columns for col in self.columnas_requeridas):
+                messagebox.showinfo("Éxito", f"Archivo cargado correctamente. {len(self.df)} registros encontrados.")
+                self.habilitar_botones_analisis()
+                self.actualizar_estado("Archivo cargado exitosamente.")
+            else:
+                missing_cols = set(self.columnas_requeridas) - set(self.df.columns)
+                messagebox.showerror("Error", f"Faltan las siguientes columnas: {', '.join(missing_cols)}")
+                self.actualizar_estado("Error al cargar el archivo.")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al cargar el archivo: {str(e)}")
+            self.actualizar_estado("Error al cargar el archivo.")
+
+    def habilitar_botones_analisis(self):
+        for boton in self.botones_analisis.values():
+            boton.configure(state="normal")
+        self.btn_muestreo_simple.configure(state="normal")
+        self.btn_muestreo_estrat.configure(state="normal")
+
+    def crear_muestra(self, metodo):
+        if self.df is None:
+            messagebox.showerror("Error", "Primero debe cargar un archivo de datos")
+            return
+
+        try:
+            tamanio = int(self.entrada_tamanio.get())
+            if tamanio <= 0 or tamanio > len(self.df):
+                raise ValueError("Tamaño de muestra inválido.")
+
+            if metodo == "simple":
+                self.sample = self.df.sample(n=tamanio)
+            elif metodo == "estratificado":
+                self.sample = self.muestreo_estratificado(tamanio)
+            messagebox.showinfo("Éxito", f"Muestra de {len(self.sample)} registros creada exitosamente")
+        except Exception as e:
+            messagebox.showerror("Error", f"Error al crear la muestra: {str(e)}")
+
+    def muestreo_estratificado(self, tamanio):
+        proporciones = self.df['ESTRATO'].value_counts(normalize=True)
+        estratos = proporciones.index
+        tamanios_estratos = (proporciones * tamanio).astype(int)
+        muestras = []
+        for estrato, n in zip(estratos, tamanios_estratos):
+            muestra_estrato = self.df[self.df['ESTRATO'] == estrato].sample(n=n if n < len(self.df[self.df['ESTRATO'] == estrato]) else len(self.df[self.df['ESTRATO'] == estrato]), replace=False)
+            muestras.append(muestra_estrato)
+        return pd.concat(muestras)
+
+    def analizar(self, columna):
+        if self.sample is None:
+            messagebox.showerror("Error", "Primero debe crear una muestra")
+            return
+
+        self.limpiar_resultados()
+        self.actualizar_estado(f"Análisis de {columna}")
+
+        if pd.api.types.is_numeric_dtype(self.sample[columna]):
+            self.analizar_numerico(columna)
+        else:
+            self.analizar_categorico(columna)
+
+    def analizar_categorico(self, columna):
+        freq = self.sample[columna].value_counts()
+        moda = self.sample[columna].mode().iloc[0] if not self.sample[columna].empty else "No data"
+
+        fig, (ax1, ax2) = plt.subplots(1, 2, figsize=(12, 6))
+        sns.barplot(x=freq.index, y=freq.values, ax=ax1, palette="viridis")
+        ax1.set_title(f'Diagrama de Barras ({columna})', fontsize=14)
+        ax1.tick_params(axis='x', rotation=45)
+        ax1.set_ylabel('Frecuencia')
+        ax1.set_xlabel(columna)
+
+        ax2.pie(freq.values, labels=freq.index, autopct='%1.1f%%', colors=sns.color_palette("pastel"))
+        ax2.set_title(f'Distribución Porcentual ({columna})', fontsize=14)
+
+        canvas = FigureCanvasTkAgg(fig, master=self.canvas_resultados)
+        canvas.draw()
+        canvas.get_tk_widget().pack(pady=20)
+
+        self.mostrar_estadisticas_e_interpretaciones(columna, freq, moda)
+
+    def analizar_numerico(self, columna):
+        datos = self.sample[columna]
+        media = datos.mean()
+        mediana = datos.median()
+        moda = datos.mode().iloc[0] if not datos.empty else "No data"
+        desv_std = datos.std()
+        varianza = datos.var()
+        coef_var = (desv_std / media) * 100 if media != 0 else 0
+
+        fig, (ax1, ax2) = plt.subplots(2, 1, figsize=(12, 8))
+        sns.histplot(data=datos, kde=True, ax=ax1, color="skyblue")
+        ax1.set_title(f'Histograma ({columna})', fontsize=14)
+        ax1.set_xlabel(columna)
+        ax1.set_ylabel('Frecuencia')
+
+        sorted_data = np.sort(datos)
+        cumfreq = np.arange(1, len(datos) + 1) / len(datos) if not datos.empty else []
+        ax2.plot(sorted_data, cumfreq, marker='o', color="coral")
+        ax2.set_title(f'Ojiva ({columna})', fontsize=14)
+        ax2.set_xlabel(columna)
+        ax2.set_ylabel('Frecuencia Acumulada')
+
+        plt.tight_layout()
+
+        canvas = FigureCanvasTkAgg(fig, master=self.canvas_resultados)
+        canvas.draw()
+        canvas.get_tk_widget().pack(pady=20)
+
+        self.mostrar_estadisticas_e_interpretaciones(columna, None, moda, media, mediana, desv_std, varianza, coef_var)
+
+    def mostrar_estadisticas_e_interpretaciones(self, columna, freq=None, moda=None, media=None, mediana=None, desv_std=None, varianza=None, coef_var=None):
+        stats_text = f"Estadísticas para {columna}:\n"
+        if freq is not None:
+            stats_text += f"- Moda: {moda}\n- Frecuencias:\n{freq.to_string()}\n"
+        else:
+            stats_text += f"- Media: {media:.2f}\n- Mediana: {mediana:.2f}\n- Moda: {moda:.2f}\n- Desviación Estándar: {desv_std:.2f}\n- Varianza: {varianza:.2f}\n- Coeficiente de Variación: {coef_var:.2f}%\n"
+
+        alert = ctk.CTkFrame(self.canvas_resultados, fg_color="#F0F4FF", corner_radius=10)
+        alert.pack(fill="x", padx=20, pady=10)
+        label_stats = ctk.CTkLabel(alert, text=stats_text, justify="left", font=ctk.CTkFont(family="Courier", size=12))
+        label_stats.pack(pady=10, padx=20)
+
+        self.mostrar_interpretacion(columna)
+
+    def mostrar_interpretacion(self, columna):
+        interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+        alert = ctk.CTkFrame(self.canvas_resultados, fg_color="#FFF4E5", corner_radius=10)
+        alert.pack(fill="x", padx=20, pady=10)
+        label_interpretacion = ctk.CTkLabel(alert, text=interpretacion, justify="left", wraplength=800, font=ctk.CTkFont(size=14))
+        label_interpretacion.pack(pady=10, padx=20)
+
+    def limpiar_resultados(self):
+        for widget in self.canvas_resultados.winfo_children():
+            widget.destroy()
+        plt.close('all')
+
+    def actualizar_estado(self, mensaje):
+        self.label_estado.configure(text=mensaje)
+        self.app.update_idletasks()
+
+    def exportar_resultados(self):
+        # Funcionalidad para exportar resultados
+        messagebox.showinfo("Exportar", "Resultados exportados exitosamente.")
+
+    def guardar_analisis(self):
+        # Funcionalidad para guardar análisis
+        messagebox.showinfo("Guardar", "Análisis guardado exitosamente.")
+
+    def nuevo_analisis(self):
+        # Reiniciar la aplicación
+        self.df = None
+        self.sample = None
+        self.limpiar_resultados()
+        self.actualizar_estado("Listo")
+        self.habilitar_botones_analisis()
+        messagebox.showinfo("Nuevo Análisis", "Puede comenzar un nuevo análisis.")
+
+    def configuracion(self):
+        # Configuración de la aplicación
+        messagebox.showinfo("Configuración", "Configuración de la aplicación.")
+
+    def personalizar_graficos(self):
+        # Personalizar gráficos
+        messagebox.showinfo("Personalizar Gráficos", "Personalice sus gráficos aquí.")
+
+    def limpiar_datos(self):
+        # Limpiar datos
+        messagebox.showinfo("Limpiar Datos", "Datos limpiados correctamente.")
+
+    def mostrar_manual(self):
+        # Mostrar manual de usuario
+        messagebox.showinfo("Manual de Usuario", "Aquí se muestra el manual de usuario.")
+
+    def mostrar_acerca_de(self):
+        # Mostrar información 'Acerca de'
+        messagebox.showinfo("Acerca de", "Versión 1.0\nDesarrollado por: https://github.com/JhonLaurens")
+
+    def cerrar_aplicacion(self):
+        resultado = messagebox.askquestion("Salir", "¿Está seguro de que desea salir?")
+        if resultado == "yes":
+            self.app.destroy()
+
+    def ejecutar(self):
+        self.app.mainloop()
+
+def main():
+    app = AppAnalisisEstadistico(tema="moderno")
+    app.ejecutar()
+
+if __name__ == "__main__":
+    main()

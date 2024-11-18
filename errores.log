@@ -1,0 +1,134 @@
+2024-11-18 17:36:29,206 - ERROR - Error al descargar el gráfico
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 291, in descargar_grafico
+    img = Image.open('grafico_actual.png')
+  File "C:\Users\jhonjara\AppData\Local\Programs\Python\Python313\Lib\site-packages\PIL\Image.py", line 3469, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jhonjara\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Estadistica\\PROYECTO\\grafico_actual.png'
+2024-11-18 17:37:03,254 - ERROR - Error al descargar el gráfico
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 291, in descargar_grafico
+    img = Image.open('grafico_actual.png')
+  File "C:\Users\jhonjara\AppData\Local\Programs\Python\Python313\Lib\site-packages\PIL\Image.py", line 3469, in open
+    fp = builtins.open(filename, "rb")
+FileNotFoundError: [Errno 2] No such file or directory: 'C:\\Users\\jhonjara\\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\\Estadistica\\PROYECTO\\grafico_actual.png'
+2024-11-18 18:12:22,116 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:12:30,908 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-18 18:13:54,251 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:13:56,480 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-18 18:15:15,149 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:15:19,465 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-18 18:25:01,103 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:25:05,309 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-18 18:25:42,143 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:25:44,817 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-18 18:27:20,858 - ERROR - Error al calcular probabilidad conjunta
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 167, in calcular_probabilidad_conjunta
+    self.mostrar_probabilidad_conjunta(conjunta, col1, col2)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 240, in mostrar_probabilidad_conjunta
+    plt.figure(figsize=(10, 6))
+    ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:28:02,283 - ERROR - Error al calcular probabilidad condicional
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 180, in calcular_probabilidad_condicional
+    self.mostrar_probabilidad_condicional(condicional, evento, condicion)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 256, in mostrar_probabilidad_condicional
+    plt.figure(figsize=(10, 6))
+    ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:28:08,540 - ERROR - Error al calcular probabilidad condicional
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 180, in calcular_probabilidad_condicional
+    self.mostrar_probabilidad_condicional(condicional, evento, condicion)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 256, in mostrar_probabilidad_condicional
+    plt.figure(figsize=(10, 6))
+    ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:28:10,387 - ERROR - Error al calcular probabilidad conjunta
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 167, in calcular_probabilidad_conjunta
+    self.mostrar_probabilidad_conjunta(conjunta, col1, col2)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 240, in mostrar_probabilidad_conjunta
+    plt.figure(figsize=(10, 6))
+    ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:28:55,824 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:29:01,141 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-18 18:29:50,494 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-18 18:29:52,094 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
