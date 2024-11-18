@@ -55,7 +55,7 @@ Desarrollada por [github.com/JhonLaurens](https://github.com/JhonLaurens).
   ```bash
   pip install customtkinter pandas numpy matplotlib seaborn scipy openpyxl
 
-  ## Instrucciones de Uso
+## Instrucciones de Uso
 
 1. **Clonar el repositorio**  
    Clona el repositorio desde GitHub a tu computadora local.
