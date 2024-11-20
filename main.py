@@ -6,9 +6,11 @@ import logging
 import sys
 
 def manejar_excepciones(tipo, valor, traceback):
-    logging.exception("Excepción no manejada: ", exc_info=(tipo, valor, traceback))
+    """Maneja excepciones no atrapadas y las registra en un archivo de log."""
+    logging.exception("Excepción no manejada:", exc_info=(tipo, valor, traceback))
 
 def main():
+    """Función principal que inicializa la aplicación."""
     # Configurar el registro de errores
     logging.basicConfig(
         filename='errores.log',

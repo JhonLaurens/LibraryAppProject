@@ -1,3 +1,3 @@
 # Archivo: modules/__init__.py
 
-# Este archivo puede estar vacío o contener inicializaciones de módulo si es necesario
+# Este archivo puede contener inicializaciones para el paquete 'modules' si es necesario
