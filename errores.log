@@ -132,3 +132,45 @@ Traceback (most recent call last):
     interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
                      ^^^^^^^^^^^^^^^^^^^^^
 AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-20 13:27:29,198 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-20 13:27:32,798 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-20 13:28:38,277 - ERROR - Error al guardar el gráfico actual
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 269, in guardar_grafico_actual
+    fig = plt.gcf()
+          ^^^
+NameError: name 'plt' is not defined
+2024-11-20 13:28:39,886 - ERROR - Error al obtener interpretación
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 277, in obtener_interpretacion
+    interpretacion = self.interpretaciones.get(columna, "No hay interpretación disponible para esta columna.")
+                     ^^^^^^^^^^^^^^^^^^^^^
+AttributeError: 'InterfazUsuario' object has no attribute 'interpretaciones'
+2024-11-20 13:30:31,880 - ERROR - Error al calcular probabilidad conjunta
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 167, in calcular_probabilidad_conjunta
+    self.mostrar_probabilidad_conjunta(conjunta, col1, col2)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 240, in mostrar_probabilidad_conjunta
+    plt.figure(figsize=(10, 6))
+    ^^^
+NameError: name 'plt' is not defined
+2024-11-20 13:30:49,121 - ERROR - Error al calcular probabilidad condicional
+Traceback (most recent call last):
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 180, in calcular_probabilidad_condicional
+    self.mostrar_probabilidad_condicional(condicional, evento, condicion)
+    ~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~~^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+  File "c:\Users\jhonjara\OneDrive - INSTITUTO TECNOLOGICO METROPOLITANO - ITM\Estadistica\PROYECTO\modules\interfaz.py", line 256, in mostrar_probabilidad_condicional
+    plt.figure(figsize=(10, 6))
+    ^^^
+NameError: name 'plt' is not defined
